@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Todo } from '../models/todo.model';
+import { TodoModel } from '../models/todo.model';
 
 const STORAGE_KEY = 'todos';
 @Injectable({
@@ -9,25 +9,30 @@ const STORAGE_KEY = 'todos';
 export class TodoService {
 
 
-  getTodos(): Todo[] {
+  getTodos(): TodoModel[] {
     return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
   }
 
-  saveTodos(todos: Todo[]) {
+  saveTodos(todos: TodoModel[]) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(todos))
   }
 
-  addTodos(title: string) {
-    const todo: Todo = {
+  addTodo(todo: {
+    title: string;
+    description: string;
+    finishDate: any;
+    timeTaken: any;
+  }) {
+    const newTodo = {
       id: Date.now(),
-      title: title,
-      completed: false
-    }
+      completed: false,
+      ...todo
+    };
 
-    const todos = this.getTodos()
-    todos.push(todo)
+    const todos = this.getTodos();
+    todos.push(newTodo);
     this.saveTodos(todos);
-    return todo;
 
+    return newTodo;
   }
 }

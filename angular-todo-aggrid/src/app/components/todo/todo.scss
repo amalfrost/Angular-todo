@@ -1,0 +1,41 @@
+.todo-container {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.todo_form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* Shared row styling */
+.row {
+    display: grid;
+    gap: 1.5rem;
+    align-items: start;
+}
+
+/* Title + Description (1:2 ratio) */
+.row-2-3 {
+    grid-template-columns: 1fr 2fr;
+}
+
+/* Finish Date + Time Taken (equal) */
+.row-1-1 {
+    grid-template-columns: 1fr 1fr;
+}
+
+/* Button row */
+.actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 0.5rem;
+}
+
+/* Make PrimeNG inputs full width */
+.p-inputtext,
+.p-inputtextarea,
+p-calendar {
+    width: 100%;
+}

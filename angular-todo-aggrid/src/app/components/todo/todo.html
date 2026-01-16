@@ -1,1 +1,45 @@
-<p>todo works!</p>
+<div class="todo-container">
+    <h1>Todo List</h1>
+
+    <form [formGroup]="todoForm" class="todo_form">
+
+        <!-- Row 1 -->
+        <div class="row row-2-3">
+            <div>
+                <span class="p-float-label">
+                    <input id="title" type="text" pInputText formControlName="title" />
+                    <label for="title">Title</label>
+                </span>
+                <small class="p-error" *ngIf="todoForm.get('title')?.touched && todoForm.get('title')?.invalid">
+                    Title is required
+                </small>
+            </div>
+
+            <div>
+                <span class="p-float-label">
+                    <textarea id="description" pInputTextarea rows="3" formControlName="description"></textarea>
+                    <label for="description">Description</label>
+                </span>
+            </div>
+        </div>
+
+        <!-- Row 2 -->
+        <div class="row row-1-1">
+            <span class="p-float-label">
+                <p-calendar id="finishDate" formControlName="finishDate" dateFormat="dd/mm/yy"></p-calendar>
+                <label for="finishDate">Finish Date</label>
+            </span>
+
+            <span class="p-float-label">
+                <input id="timeTaken" type="number" pInputText formControlName="timeTaken" />
+                <label for="timeTaken">Time Taken (hrs)</label>
+            </span>
+        </div>
+
+        <!-- Button -->
+        <div class="actions">
+            <p-button label="Add Todo" icon="pi pi-plus" (onClick)="addTodo()"></p-button>
+        </div>
+
+    </form>
+</div>
