@@ -45,11 +45,11 @@
 
     <div class="ag-theme-alpine todo-grid">
         <ag-grid-angular class="ag-theme-alpine todo-grid" [rowData]="todos" [columnDefs]="colDefs"
-            [defaultColDef]="defaultColDef" [rowClassRules]="rowClassRules" [singleClickEdit]="false"
-            (cellValueChanged)="onCellValueChanged($event)" (cellClicked)="onCellClicked($event)">
-
-            >
+            [components]="components" [context]="{ componentParent: this }" [rowClassRules]="rowClassRules"
+            (cellValueChanged)="onCellValueChanged($event)" [getRowId]="getRowId">
         </ag-grid-angular>
+
+
     </div>
 
 </div>

@@ -10,16 +10,22 @@ import { ColDef } from 'ag-grid-community';
 import { TodoModel } from '../../models/todo.model';
 import { CommonModule } from '@angular/common';
 import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
+import { TodoActionRendererComponent } from '../todo-action-renderer/todo-action-renderer';
+
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 @Component({
   selector: 'app-todo',
-  imports: [InputTextModule, CommonModule, FormsModule, ButtonModule, ReactiveFormsModule, CalendarModule, InputTextareaModule, AgGridAngular],
+  imports: [InputTextModule, TodoActionRendererComponent, CommonModule, FormsModule, ButtonModule, ReactiveFormsModule, CalendarModule, InputTextareaModule, AgGridAngular],
   templateUrl: './todo.html',
   standalone: true,
   styleUrl: './todo.scss',
 })
 export class Todo implements OnInit {
+  components = {
+    todoActionRenderer: TodoActionRendererComponent
+  };
+
   todoForm!: FormGroup;
 
   constructor(private fb: FormBuilder, private todoService: TodoService) {
@@ -33,20 +39,35 @@ export class Todo implements OnInit {
   }
   todos: TodoModel[] = [];
 
+  onDeleteTodo(id: number) {
+    this.todos = this.todos.filter(todo => todo.id !== id);
+    this.todoService.saveTodos(this.todos);
+  }
+  onToggleCompleted(id: number, completed: boolean) {
+    this.todos = this.todos.map(todo =>
+      todo.id === id ? { ...todo, completed } : todo
+    );
+
+    this.todoService.saveTodos(this.todos);
+  }
+
+
+
 
   ngOnInit() {
     this.todos = this.todoService.getTodos();
   }
 
+
   colDefs: ColDef[] = [
     {
-      field: 'completed',
-      headerName: 'Done',
-      width: 90,
-      editable: true,
-      cellRenderer: 'agCheckboxCellRenderer',
-      cellStyle: { textAlign: 'center' }
+      headerName: '',
+      field: 'actions',
+      width: 120,
+      editable: false,
+      cellRenderer: 'todoActionRenderer'
     },
+
 
     {
       field: 'title',
@@ -84,11 +105,17 @@ export class Todo implements OnInit {
     filter: true,
     resizable: true
   };
+  getRowId = (params: any) => {
+    return params.data.id;
+  };
+
+
 
   onCellClicked(event: any) {
     if (event.colDef.field === 'completed') {
       // Force row style re-evaluation
       event.api.redrawRows({ rowNodes: [event.node] });
+      debugger;
 
       // Persist changes
       this.todoService.saveTodos(this.todos);
@@ -102,15 +129,28 @@ export class Todo implements OnInit {
       rowNodes: [event.node],
       force: true
     });
+    debugger;
 
     // Persist changes
     this.todoService.saveTodos(this.todos);
   }
 
 
+  // rowClassRules = {
+  //   'completed-row': (params: any) => params.data.completed === true
+  // };
   rowClassRules = {
-    'completed-row': (params: any) => params.data.completed === true
+    'completed-row': (params: any) => {
+      console.log(
+        'Evaluating row',
+        params.data.id,
+        'completed =',
+        params.data.completed
+      );
+      return params.data.completed === true;
+    }
   };
+
   addTodo() {
     if (this.todoForm.invalid) {
       this.todoForm.markAllAsTouched();

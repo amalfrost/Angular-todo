@@ -35,4 +35,11 @@ export class TodoService {
 
     return newTodo;
   }
+  deleteTodo(id: number) {
+    const todos = this.getTodos()
+
+    const updatedTodos = todos.filter(todo => todo.id !== id)
+
+    this.saveTodos(updatedTodos);
+  }
 }
